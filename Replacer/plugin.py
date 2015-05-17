@@ -49,6 +49,7 @@ class Replacer(callbacks.PluginRegexp):
     public = True
     unaddressedRegexps = ('replacer',)
 
+    @staticmethod
     def _unpack_sed(expr):
         if '\0' in expr:
             raise ValueError('expr can\'t contain NUL')
