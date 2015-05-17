@@ -35,13 +35,11 @@ from supybot.commands import *
 import supybot.plugins as plugins
 import supybot.ircutils as ircutils
 import supybot.callbacks as callbacks
-#try:
-#    from supybot.i18n import PluginInternationalization
-#    _ = PluginInternationalization('Replacer')
-#except ImportError:
-    # Placeholder that allows to run the plugin on a bot
-    # without the i18n module
-#    _ = lambda x: x
+try:
+    from supybot.i18n import PluginInternationalization
+    _ = PluginInternationalization('Replacer')
+except ImportError:
+    _ = lambda x: x
 
 SED_PATTERN = re.compile(r'^s(?P<delim>[^A-Za-z0-9\\])(?P<pattern>.*?)(?P=delim)(?P<replacement>.*?)(?:(?P=delim)(?P<flags>[gi]*))?$')
 #SED_PATTERN = re.compile(r'^s(?P<delim>[' + re.escape(string.punctuation) + '])(?P<pattern>.*?)(?P=delim)(?P<replacement>.*?)(?:(?P=delim)(?P<flags>[gi]*))?$')
@@ -52,18 +50,11 @@ class Replacer(callbacks.PluginRegexp):
     public = True
     unaddressedRegexps = ('replacer',)
 
-    #def _validLastMsg(self, msg):
-    #    return msg.prefix and \
-    #           msg.command == 'PRIVMSG' and \
-    #           ircutils.isChannel(msg.args[0])
-
-    @staticmethod
     def _unpack_sed(expr):
         if '\0' in expr:
             raise ValueError('expr can\'t contain NUL')
 
         delim = expr[1]
-
         escaped_expr = ''
 
         for (i, c) in enumerate(expr):
@@ -112,17 +103,18 @@ class Replacer(callbacks.PluginRegexp):
             irc.error("Private Use Prohibited")
             return
 
-        #iterable = filter(self._validLastMsg, reversed(irc.state.history))
         iterable = reversed(irc.state.history)
         (pattern, replacement, count) = self._unpack_sed(msg.args[1])
         next(iterable)
         for m in iterable:
-            #print(msg.nick + " :: " + m.nick + " :: " + m.args[1])
             if m.nick == msg.nick and \
                 m.args[0] == msg.args[0] and \
                 msg.command == 'PRIVMSG' and \
                 pattern.search(m.args[1]):
-                irc.reply("meant to say => " + pattern.sub(replacement, m.args[1], count), prefixNick=True)
+                irc.reply("meant to say => " + , prefixNick=True)
+                irc.reply(_("%s meant => %s")
+                          % (msg.nick, pattern.sub(replacement, m.args[1], count)),
+                          prefixNick=False)
                 break
         return
 
