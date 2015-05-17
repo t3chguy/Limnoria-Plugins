@@ -110,7 +110,6 @@ class Replacer(callbacks.PluginRegexp):
                 m.args[0] == msg.args[0] and \
                 msg.command == 'PRIVMSG' and \
                 pattern.search(m.args[1]):
-                irc.reply("meant to say => " + , prefixNick=True)
                 irc.reply(_("%s meant => %s")
                           % (msg.nick, pattern.sub(replacement, m.args[1], count)),
                           prefixNick=False)
