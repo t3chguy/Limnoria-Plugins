@@ -32,8 +32,6 @@ import re
 
 import supybot.utils as utils
 from supybot.commands import *
-import supybot.ircmsgs as ircmsgs
-import supybot.commands as commands
 import supybot.plugins as plugins
 import supybot.ircutils as ircutils
 import supybot.callbacks as callbacks
@@ -54,10 +52,10 @@ class Replacer(callbacks.PluginRegexp):
     public = True
     unaddressedRegexps = ('replacer',)
 
-    def _validLastMsg(self, msg):
-        return msg.prefix and \
-               msg.command == 'PRIVMSG' and \
-               ircutils.isChannel(msg.args[0])
+    #def _validLastMsg(self, msg):
+    #    return msg.prefix and \
+    #           msg.command == 'PRIVMSG' and \
+    #           ircutils.isChannel(msg.args[0])
 
     @staticmethod
     def _unpack_sed(expr):
@@ -114,12 +112,16 @@ class Replacer(callbacks.PluginRegexp):
             irc.error("Private Use Prohibited")
             return
 
-        iterable = filter(self._validLastMsg, reversed(irc.state.history))
+        #iterable = filter(self._validLastMsg, reversed(irc.state.history))
+        iterable = reversed(irc.state.history)
         (pattern, replacement, count) = self._unpack_sed(msg.args[1])
         next(iterable)
         for m in iterable:
             #print(msg.nick + " :: " + m.nick + " :: " + m.args[1])
-            if m.nick == msg.nick and pattern.search(m.args[1]):
+            if m.nick == msg.nick and \
+                m.args[0] == msg.args[0] and \
+                msg.command == 'PRIVMSG' and \
+                pattern.search(m.args[1]):
                 irc.reply("meant to say => " + pattern.sub(replacement, m.args[1], count), prefixNick=True)
                 break
         return
