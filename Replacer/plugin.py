@@ -108,9 +108,9 @@ class Replacer(callbacks.PluginRegexp):
         next(iterable)
         for m in iterable:
             if m.nick == msg.nick and m.args[0] == msg.args[0] and \
-            		msg.command == 'PRIVMSG' and pattern.search(m.args[1]):
-            	irc.reply(_("%s meant => %s") % (msg.nick,
-                        pattern.sub(replacement, m.args[1], count), prefixNick=False)
+                    msg.command == 'PRIVMSG' and pattern.search(m.args[1]):
+                m.args[1] = pattern.sub(replacement, m.args[1], count)
+                irc.reply(_("%s meant => %s") % (msg.nick, m.args[1]), prefixNick=False)
                 break
         return
 
