@@ -105,7 +105,10 @@ class Replacer(callbacks.PluginRegexp):
             irc.error(_("Private Use Prohibited"), Raise=True)
 
         iterable = reversed(irc.state.history)
-        (pattern, replacement, count) = self._unpack_sed(msg.args[1])
+        try:
+            (pattern, replacement, count) = self._unpack_sed(msg.args[1])
+        except ValueError as e:
+            return
         next(iterable)
         for m in iterable:
             if m.nick == msg.nick and \
