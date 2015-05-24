@@ -40,7 +40,9 @@ try:
 except ImportError:
     _ = lambda x: x
 
-SED_PATTERN = re.compile(r'^s(?P<delim>[^A-Za-z0-9\\])(?P<pattern>.*?)(?P=delim)(?P<replacement>.*?)(?:(?P=delim)(?P<flags>[gi]*))?$')
+SED_PATTERN = re.compile(
+    r'^s(?P<delim>[^A-Za-z0-9\\])(?P<pattern>.*?)(?P=delim)'
+    r'(?P<replacement>.*?)(?:(?P=delim)(?P<flags>[gi]*))?$')
 #SED_PATTERN = re.compile(r'^s(?P<delim>[' + re.escape(string.punctuation) + '])(?P<pattern>.*?)(?P=delim)(?P<replacement>.*?)(?:(?P=delim)(?P<flags>[gi]*))?$')
 
 class Replacer(callbacks.PluginRegexp):
@@ -100,8 +102,7 @@ class Replacer(callbacks.PluginRegexp):
         r"^s(?P<delim>[^A-Za-z0-9\\])(?:.*?)(?P=delim)(?:.*?)(?:(?P=delim)(?:[gi]*))?$"
 
         if not irc.isChannel(msg.args[0]):
-            irc.error("Private Use Prohibited")
-            return
+            irc.error(_("Private Use Prohibited"), Raise=True)
 
         iterable = reversed(irc.state.history)
         (pattern, replacement, count) = self._unpack_sed(msg.args[1])
@@ -111,8 +112,8 @@ class Replacer(callbacks.PluginRegexp):
                 m.args[0] == msg.args[0] and \
                 msg.command == 'PRIVMSG' and \
                 pattern.search(m.args[1]):
-                irc.reply(_("%s meant => %s")
-                          % (msg.nick, pattern.sub(replacement, m.args[1], count)),
+                irc.reply(_("%s meant => %s") %
+                          (msg.nick, pattern.sub(replacement, m.args[1], count)),
                           prefixNick=False)
                 break
         return
