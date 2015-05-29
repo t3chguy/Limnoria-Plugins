@@ -29,6 +29,7 @@
 ###
 
 from supybot.commands import *
+import supybot.ircdb as ircdb
 import supybot.plugins as plugins
 import supybot.callbacks as callbacks
 
@@ -103,7 +104,6 @@ class Replacer(callbacks.PluginRegexp):
         r"^s(?P<delim>[^A-Za-z0-9\\])(?:.*?)(?P=delim)"
         r"(?:.*?)(?:(?P=delim)(?:[gi]*))?$"
 
-        print(ircdb.channels.getChannel(msg.args[0]).lobotomized)
         if ircdb.channels.getChannel(msg.args[0]).lobotomized:
             return
 
