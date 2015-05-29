@@ -43,7 +43,8 @@ except ImportError:
 SED_PATTERN = re.compile(
     r'^s(?P<delim>[^A-Za-z0-9\\])(?P<pattern>.*?)(?P=delim)'
     r'(?P<replacement>.*?)(?:(?P=delim)(?P<flags>[gi]*))?$')
-#SED_PATTERN = re.compile(r'^s(?P<delim>[' + re.escape(string.punctuation) + '])(?P<pattern>.*?)(?P=delim)(?P<replacement>.*?)(?:(?P=delim)(?P<flags>[gi]*))?$')
+# SED_PATTERN = re.compile(r'^s(?P<delim>[' + re.escape(string.punctuation) + '])(?P<pattern>.*?)(?P=delim)(?P<replacement>.*?)(?:(?P=delim)(?P<flags>[gi]*))?$')
+
 
 class Replacer(callbacks.PluginRegexp):
     """History Replacer - Sed Regex Syntax"""
@@ -76,7 +77,6 @@ class Replacer(callbacks.PluginRegexp):
             raise ValueError('invalid expression')
 
         groups = match.groupdict()
-
         pattern = groups['pattern'].replace('\0', delim)
         replacement = groups['replacement'].replace('\0', delim)
 
@@ -101,8 +101,10 @@ class Replacer(callbacks.PluginRegexp):
     def replacer(self, irc, msg, regex):
         r"^s(?P<delim>[^A-Za-z0-9\\])(?:.*?)(?P=delim)(?:.*?)(?:(?P=delim)(?:[gi]*))?$"
 
-        if not irc.isChannel(msg.args[0]):
-            irc.error(_("Private Use Prohibited"), Raise=True)
+        chan = msg.args[0]
+        if not irc.isChannel(chan) or ircdb.channels.getChannel(chan).lobotomized:
+            return  # No more error message, it actually can't be triggered privately anyway,
+            # since private messages are treated as commands and this is a Regex Trigger.
 
         iterable = reversed(irc.state.history)
         try:
@@ -112,9 +114,9 @@ class Replacer(callbacks.PluginRegexp):
         next(iterable)
         for m in iterable:
             if m.nick == msg.nick and \
-                m.args[0] == msg.args[0] and \
-                msg.command == 'PRIVMSG' and \
-                pattern.search(m.args[1]):
+                    m.args[0] == msg.args[0] and \
+                    msg.command == 'PRIVMSG' and \
+                    pattern.search(m.args[1]):
                 irc.reply(_("%s meant => %s") %
                           (msg.nick, pattern.sub(replacement, m.args[1], count)),
                           prefixNick=False)
