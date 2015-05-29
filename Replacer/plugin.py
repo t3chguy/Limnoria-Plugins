@@ -43,7 +43,8 @@ except ImportError:
 SED_PATTERN = re.compile(
     r'^s(?P<delim>[^A-Za-z0-9\\])(?P<pattern>.*?)(?P=delim)'
     r'(?P<replacement>.*?)(?:(?P=delim)(?P<flags>[gi]*))?$')
-# SED_PATTERN = re.compile(r'^s(?P<delim>[' + re.escape(string.punctuation) + '])(?P<pattern>.*?)(?P=delim)(?P<replacement>.*?)(?:(?P=delim)(?P<flags>[gi]*))?$')
+# SED_PATTERN = re.compile(r'^s(?P<delim>[' + re.escape(string.punctuation) + '])
+# (?P<pattern>.*?)(?P=delim)(?P<replacement>.*?)(?:(?P=delim)(?P<flags>[gi]*))?$')
 
 
 class Replacer(callbacks.PluginRegexp):
@@ -99,12 +100,11 @@ class Replacer(callbacks.PluginRegexp):
         return (pattern, replacement, count)
 
     def replacer(self, irc, msg, regex):
-        r"^s(?P<delim>[^A-Za-z0-9\\])(?:.*?)(?P=delim)(?:.*?)(?:(?P=delim)(?:[gi]*))?$"
+        r"^s(?P<delim>[^A-Za-z0-9\\])(?:.*?)(?P=delim)"
+        r"(?:.*?)(?:(?P=delim)(?:[gi]*))?$"
 
-        chan = msg.args[0]
-        if not irc.isChannel(chan) or ircdb.channels.getChannel(chan).lobotomized:
-            return  # No more error message, it actually can't be triggered privately anyway,
-            # since private messages are treated as commands and this is a Regex Trigger.
+        if ircdb.channels.getChannel(msg.args[0]).lobotomized:
+            return
 
         iterable = reversed(irc.state.history)
         try:
