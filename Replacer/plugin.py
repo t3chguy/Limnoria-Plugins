@@ -107,6 +107,8 @@ class Replacer(callbacks.PluginRegexp):
         try:
             (pattern, replacement, count) = self._unpack_sed(msg.args[1])
         except ValueError as e:
+            if self.registryValue("displayErrors", msg.args[0]):
+            irc.error(_("Error Encountered in your Regex Syntax."), Raise=True)
             return
         next(iterable)
         for m in iterable:
@@ -116,8 +118,11 @@ class Replacer(callbacks.PluginRegexp):
                     pattern.search(m.args[1]):
                 irc.reply(_("%s meant => %s") %
                           (msg.nick, pattern.sub(replacement, m.args[1], count)),
-                          prefixNick=False)
+                          prefixNick=False, Raise=True)
                 break
+        if self.registryValue("displayErrors", msg.args[0]):
+            irc.error(_("Search not found in the last %i messages.") %
+                      len(irc.state.history), Raise=True)
         return
 
 Class = Replacer

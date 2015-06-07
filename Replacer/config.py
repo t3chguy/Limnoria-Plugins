@@ -44,4 +44,7 @@ def configure(advanced):
 
 Replacer = conf.registerPlugin('Replacer')
 
+conf.registerChannelValue(Replacer, 'displayErrors',
+    registry.Boolean(True, _("""Should Errors be Displayed?""")))
+
 # vim:set shiftwidth=4 tabstop=4 expandtab textwidth=79:
