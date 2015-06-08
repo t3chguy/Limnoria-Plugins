@@ -118,8 +118,8 @@ class Replacer(callbacks.PluginRegexp):
                     pattern.search(m.args[1]):
                 irc.reply(_("%s meant => %s") %
                           (msg.nick, pattern.sub(replacement, m.args[1], count)),
-                          prefixNick=False, Raise=True)
-                break
+                          prefixNick=False)
+                return
         if self.registryValue("displayErrors", msg.args[0]):
             irc.error(_("Search not found in the last %i messages.") %
                       len(irc.state.history), Raise=True)
