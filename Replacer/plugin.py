@@ -41,11 +41,9 @@ try:
 except ImportError:
     _ = lambda x: x
 
-SED_PATTERN = re.compile(
-    r'^s(?P<delim>[^A-Za-z0-9\\])(?P<pattern>.*?)(?P=delim)'
-    r'(?P<replacement>.*?)(?:(?P=delim)(?P<flags>[gi]*))?$')
-# SED_PATTERN = re.compile(r'^s(?P<delim>[' + re.escape(string.punctuation) + '])
-# (?P<pattern>.*?)(?P=delim)(?P<replacement>.*?)(?:(?P=delim)(?P<flags>[gi]*))?$')
+SED_PATTERN = re.compile(r"^s(?P<delim>[^A-Za-z0-9\\])(?P<pattern>.*?)"
+                         r"(?P=delim)(?P<replacement>.*?)"
+                         r"(?:(?P=delim)(?P<flags>[gi]*))?$")
 
 
 class Replacer(callbacks.PluginRegexp):
@@ -64,8 +62,7 @@ class Replacer(callbacks.PluginRegexp):
 
         for (i, c) in enumerate(expr):
             if c == delim and i > 0:
-                if expr[i - 1] == delim and \
-                        (expr[i - 2] != '\\' or expr[i - 2] == delim):
+                if expr[i - 1] == delim and expr[i - 2] != '\\':
                     print(expr[i-1])
                     print(expr[i-2])
                     raise ValueError('invalid expression')
