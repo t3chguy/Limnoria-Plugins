@@ -103,8 +103,10 @@ class CleverbotIO(callbacks.Plugin):
     def cleverbotio(self, irc, msg, args, text):
         """Manual Call to the Cleverbot.io API"""
         self._queryBot(irc, text)
-
     cleverbotio = wrap(cleverbotio, ['text'])
+
+    def invalidCommand(self, irc, msg, tokens):
+        print(msg.args)
 
 Class = CleverbotIO
 
