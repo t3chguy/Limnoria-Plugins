@@ -116,7 +116,7 @@ class Replacer(callbacks.PluginRegexp):
         for m in iterable:
             if m.nick == msg.nick and \
                     m.args[0] == msg.args[0] and \
-                    msg.command == 'PRIVMSG' and \
+                    m.command == 'PRIVMSG' and \
                     pattern.search(m.args[1]):
                 print(m.args[1])
                 print(m.args)
