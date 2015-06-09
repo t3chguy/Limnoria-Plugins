@@ -52,12 +52,12 @@ class Replacer(callbacks.PluginRegexp):
     """History Replacer - Sed Regex Syntax"""
     threaded = True
     public = True
-    unaddressedRegexps = ('replacer',)
+    unaddressedRegexps = ['replacer']
 
     @staticmethod
     def _unpack_sed(expr):
         if '\0' in expr:
-            raise ValueError('expr can\'t contain NUL')
+            raise ValueError('Expression can\'t contain NUL')
 
         delim = expr[1]
         escaped_expr = ''
@@ -65,6 +65,9 @@ class Replacer(callbacks.PluginRegexp):
         for (i, c) in enumerate(expr):
             if c == delim and i > 0:
                 if expr[i - 1] == delim and expr[i - 2] != '\\':
+                    print(expr[i])
+                    print(expr[i-1])
+                    print(expr[i-2])
                     raise ValueError('invalid expression')
 
                 if expr[i - 1] == '\\':
@@ -120,7 +123,7 @@ class Replacer(callbacks.PluginRegexp):
 
                 if ircmsgs.isAction(m):
                     text = ircmsgs.unAction(m)
-                    tmpl = '* '
+                    tmpl = '*'
                 else:
                     text = m.args[1]
                     tmpl = ''
