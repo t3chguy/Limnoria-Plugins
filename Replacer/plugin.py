@@ -116,15 +116,17 @@ class Replacer(callbacks.PluginRegexp):
         for m in iterable:
             if m.nick == msg.nick and \
                     m.args[0] == msg.args[0] and \
-                    m.command == 'PRIVMSG' and \
-                    pattern.search(m.args[1]):
-                print(m.args[1])
-                print(m.args)
-                print(m)
-                print(ircmsgs.isAction(m))
-                irc.reply(_("%s meant => %s") %
-                          (msg.nick, pattern.sub(replacement, m.args[1], count)),
-                          prefixNick=False)
+                    m.command == 'PRIVMSG':
+
+                text = ircmsgs.unAction(m)
+                if pattern.search(text):
+                    print(m.args[1])
+                    print(m.args)
+                    print(m)
+                    print(ircmsgs.isAction(m))
+                    irc.reply(_("%s meant => %s") %
+                              (msg.nick, pattern.sub(replacement, m.args[1],
+                               count)), prefixNick=False)
                 return
         if self.registryValue("displayErrors", msg.args[0]):
             irc.error(_("Search not found in the last %i messages.") %
