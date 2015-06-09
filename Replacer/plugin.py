@@ -108,7 +108,8 @@ class Replacer(callbacks.PluginRegexp):
             (pattern, replacement, count) = self._unpack_sed(msg.args[1])
         except ValueError as e:
             if self.registryValue("displayErrors", msg.args[0]):
-                irc.error(_("Error Encountered in your Regex Syntax."), Raise=True)
+                irc.error(_("Error Encountered in your Regex Syntax. <%s>" %
+                          e), Raise=True)
             return
         next(iterable)
         for m in iterable:
