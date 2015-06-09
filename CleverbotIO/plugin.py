@@ -69,9 +69,9 @@ class CleverbotIO(callbacks.Plugin):
         }
         r = requests.post(self._createUrl, data=payload)
         j = r.json()
-        if j.status == 'success':
-            self.botNick = j.nick
-        print(j.status)
+        if j['status'] == 'success':
+            self.botNick = j['nick']
+        print(j['status'])
 
     _queryUrl = 'https://cleverbot.io/1.0/ask'
     def _queryBot(self, query):
@@ -83,7 +83,7 @@ class CleverbotIO(callbacks.Plugin):
         }
         r = requests.post(self._queryUrl, data=payload)
         j = r.json()
-        if j.status == 'success':
+        if j['status'] == 'success':
             print(j.response)
 
 
