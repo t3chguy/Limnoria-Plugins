@@ -120,13 +120,13 @@ class Replacer(callbacks.PluginRegexp):
 
                 if ircmsgs.isAction(m):
                     text = ircmsgs.unAction(m)
-                    tmpl = 'do'
+                    tmpl = '* '
                 else:
                     text = m.args[1]
-                    tmlp = 'say'
+                    tmpl = ''
 
                 if pattern.search(text):
-                    irc.reply(_("%s meant to %s ≡ %s") %
+                    irc.reply(_("%s meant «%s%s»") %
                               (msg.nick, tmpl, pattern.sub(replacement, text,
                                count)), prefixNick=False)
                 return
