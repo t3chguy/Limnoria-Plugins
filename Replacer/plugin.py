@@ -75,7 +75,7 @@ class Replacer(callbacks.PluginRegexp):
         match = re.search(SED_PATTERN, escaped_expr)
 
         if not match:
-            raise ValueError('invalid expression')
+            raise ValueError('Invalid Expression')
 
         groups = match.groupdict()
         pattern = groups['pattern'].replace('\0', delim)
