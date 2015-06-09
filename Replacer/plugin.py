@@ -30,6 +30,7 @@
 
 from supybot.commands import *
 import supybot.plugins as plugins
+import supybot.ircmsgs as ircmsgs
 import supybot.callbacks as callbacks
 
 import re
@@ -120,7 +121,7 @@ class Replacer(callbacks.PluginRegexp):
                 print(m.args[1])
                 print(m.args)
                 print(m)
-                print(irc.isAction(m.args[1]))
+                print(ircmsgs.isAction(m.args[1]))
                 irc.reply(_("%s meant => %s") %
                           (msg.nick, pattern.sub(replacement, m.args[1], count)),
                           prefixNick=False)
