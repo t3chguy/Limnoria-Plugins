@@ -106,7 +106,8 @@ class CleverbotIO(callbacks.Plugin):
     cleverbotio = wrap(cleverbotio, ['text'])
 
     def invalidCommand(self, irc, msg, tokens):
-        print(msg.args)
+        if irc.isChannel(msg.args[0]) and self.registryValue('invalidCommand'):
+            self._queryBot(irc, msg.args[1])
 
 Class = CleverbotIO
 
