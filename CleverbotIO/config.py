@@ -28,9 +28,31 @@
 
 ###
 
-from supybot.test import *
+import supybot.conf as conf
+import supybot.registry as registry
+try:
+    from supybot.i18n import PluginInternationalization
+    _ = PluginInternationalization('CleverbotIO')
+except:
+    _ = lambda x: x
 
-class ReplacerTestCase(PluginTestCase):
-    plugins = ('Replacer',)
+def configure(advanced):
+    from supybot.questions import expect, anything, something, yn
+    conf.registerPlugin('CleverbotIO', True)
+    if advanced:
+        output('The CleverbotIO Plugin allows you to interact with cleverbot.io')
+
+CleverbotIO = conf.registerPlugin('CleverbotIO')
+
+conf.registerChannelValue(CleverbotIO, 'invalidCommand',
+    registry.Boolean(False, _("""Should I be invoked on Invalid Commands?""")))
+conf.registerGlobalValue(CleverbotIO, 'botName',
+	registry.String('', _("""The Cleverbot.io API BotName String""")))
+conf.registerGlobalValue(CleverbotIO, 'appUser',
+	registry.String('', _("""The Cleverbot.io API App_User String
+	(required)"""), private=True))
+conf.registerGlobalValue(CleverbotIO, 'appKey',
+	registry.String('', _("""The Cleverbot.io API App_key String
+	(required)"""), private=True))
 
 # vim:set shiftwidth=4 tabstop=4 expandtab textwidth=79:

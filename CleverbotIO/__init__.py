@@ -28,9 +28,30 @@
 
 ###
 
-from supybot.test import *
+"""
+Enables the bot to respond to humans via the
+Cleverbot AI through the CleverbotIO API.
+"""
 
-class ReplacerTestCase(PluginTestCase):
-    plugins = ('Replacer',)
+import supybot
+import supybot.world as world
+
+__version__ = "0.1"
+__author__ = supybot.Author("Michael Daniel Telatynski", "t3chguy", "postmaster@webdevguru.co.uk")
+__contributors__ = {}
+__url__ = 'https://github.com/t3chguy/Limnoria-Plugins'
+
+from . import config
+from . import plugin
+from imp import reload
+
+reload(config)
+reload(plugin)
+
+if world.testing:
+    from . import test
+
+Class = plugin.Class
+configure = config.configure
 
 # vim:set shiftwidth=4 tabstop=4 expandtab textwidth=79:

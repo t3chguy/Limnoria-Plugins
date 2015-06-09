@@ -31,6 +31,6 @@
 from supybot.test import *
 
 class ReplacerTestCase(PluginTestCase):
-    plugins = ('Replacer',)
+    plugins = ('CleverbotIO',)
 
 # vim:set shiftwidth=4 tabstop=4 expandtab textwidth=79:
