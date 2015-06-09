@@ -96,9 +96,8 @@ class CleverbotIO(callbacks.Plugin):
         }
         r = requests.post(self._queryUrl, data=payload)
         j = r.json()
-        print(r)
         if j['status'] == 'success':
-            print(j.response)
+            irc.reply(j['response'])
 
 
     def cleverbotio(self, irc, msg, args, text):
