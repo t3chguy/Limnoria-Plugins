@@ -64,10 +64,8 @@ class Replacer(callbacks.PluginRegexp):
 
         for (i, c) in enumerate(expr):
             if c == delim and i > 0:
-                if expr[i - 1] == delim and expr[i - 2] != '\\':
-                    print(expr[i])
-                    print(expr[i-1])
-                    print(expr[i-2])
+                if expr[i - 1] == delim and
+                        (expr[i - 2] != '\\' or expr[i - 2] == delim):
                     raise ValueError('invalid expression')
 
                 if expr[i - 1] == '\\':
