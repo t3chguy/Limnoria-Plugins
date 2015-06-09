@@ -90,7 +90,7 @@ class CleverbotIO(callbacks.Plugin):
         """Manual Call to the Cleverbot.io API"""
         print(text)
 
-    cleverbotio = wrap(cleverbotio, ['text']
+    cleverbotio = wrap(cleverbotio, ['text'])
 
 Class = CleverbotIO
 
