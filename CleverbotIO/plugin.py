@@ -27,14 +27,14 @@
 # POSSIBILITY OF SUCH DAMAGE.
 
 ###
+
 import requests
+
 from supybot.commands import *
 import supybot.conf as conf
 import supybot.utils as utils
 import supybot.plugins as plugins
 import supybot.callbacks as callbacks
-
-import re
 
 try:
     from supybot.i18n import PluginInternationalization
@@ -99,14 +99,14 @@ class CleverbotIO(callbacks.Plugin):
         if j['status'] == 'success':
             irc.reply(j['response'])
 
-
     def cleverbotio(self, irc, msg, args, text):
         """Manual Call to the Cleverbot.io API"""
         self._queryBot(irc, text)
     cleverbotio = wrap(cleverbotio, ['text'])
 
     def invalidCommand(self, irc, msg, tokens):
-        if irc.isChannel(msg.args[0]) and self.registryValue('invalidCommand'):
+        chan = msg.args[0]
+        if irc.isChannel(chan) and self.registryValue('invalidCommand', chan):
             self._queryBot(irc, msg.args[1])
 
 Class = CleverbotIO
