@@ -46,8 +46,6 @@ CleverbotIO = conf.registerPlugin('CleverbotIO')
 
 conf.registerChannelValue(CleverbotIO, 'invalidCommand',
     registry.Boolean(False, _("""Should I be invoked on Invalid Commands?""")))
-conf.registerGlobalValue(CleverbotIO, 'botName',
-	registry.String('', _("""The Cleverbot.io API BotName String""")))
 conf.registerGlobalValue(CleverbotIO, 'appUser',
 	registry.String('', _("""The Cleverbot.io API App_User String
 	(required)"""), private=True))

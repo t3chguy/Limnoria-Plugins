@@ -62,8 +62,7 @@ class CleverbotIO(callbacks.Plugin):
         self.log.info('Self Re-Initializing CleverbotIO')
 
     def _checkConfig(self):
-        return (self.registryValue('botName') and
-                self.registryValue('appUser') and
+        return (self.registryValue('appUser') and
                 self.registryValue('appKey'))
 
     _createUrl = 'https://cleverbot.io/1.0/create'
@@ -73,17 +72,16 @@ class CleverbotIO(callbacks.Plugin):
 
         payload = {
             'user': self.registryValue('appUser'),
-            'key': self.registryValue('appKey'),
-            'nick': self.registryValue('botName')
+            'key': self.registryValue('appKey')
         }
         r = requests.post(self._createUrl, data=payload)
         j = r.json()
         if j['status'] == 'success':
             self.botNick = j['nick']
-            self.log.info('CleverbotIO Instance (%s) Registered' % j['nick'])
+            self.log.info('CleverbotIOs Instance (%s) Registered' % j['nick'])
         else:
-            self.log.error('CleverbotIO Instance failed to Register: %s -- %s' %
-                           (j['status'], j['nick']))
+            self.log.error('CleverbotIO Instance failed to Register: %s' %
+                           j['status'])
 
     _queryUrl = 'https://cleverbot.io/1.0/ask'
     def _queryBot(self, irc, query):
