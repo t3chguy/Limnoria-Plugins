@@ -29,6 +29,7 @@
 ###
 import requests
 from supybot.commands import *
+import supybot.conf as conf
 import supybot.utils as utils
 import supybot.plugins as plugins
 import supybot.callbacks as callbacks
