@@ -57,11 +57,20 @@ class CleverbotIO(callbacks.Plugin):
         conf.supybot.plugins.CleverbotIO.appKey.addCallback(self._configCallback)
         self._createBot()
 
-    def _configCallback(self, name=None):
-        self.log.info('one of the configs changed (%s)' % name)
+    def _configCallback(self):
+        self._createBot()
+        self.log.info('Self Re-Initializing CleverbotIO')
+
+    def _checkConfig(self):
+        return (self.registryValue('botName') and
+                self.registryValue('appUser') and
+                self.registryValue('appKey'))
 
     _createUrl = 'https://cleverbot.io/1.0/create'
     def _createBot(self):
+        if not self._checkConfig():
+            return
+
         payload = {
             'user': self.registryValue('appUser'),
             'key': self.registryValue('appKey'),
@@ -74,7 +83,10 @@ class CleverbotIO(callbacks.Plugin):
         print(j['status'])
 
     _queryUrl = 'https://cleverbot.io/1.0/ask'
-    def _queryBot(self, query):
+    def _queryBot(self, irc, query):
+        if not (self._checkConfig() and self.botNick):
+            irc.error(_("""Plugin needs to be configured.
+                      Check @config list plugins.CleverbotIO"""), Raise=True)
         payload = {
             'user': self.registryValue('appUser'),
             'key': self.registryValue('appKey'),
