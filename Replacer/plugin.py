@@ -121,7 +121,7 @@ class Replacer(callbacks.PluginRegexp):
                 print(m.args[1])
                 print(m.args)
                 print(m)
-                print(ircmsgs.isAction(m.args[1]))
+                print(ircmsgs.isAction(m))
                 irc.reply(_("%s meant => %s") %
                           (msg.nick, pattern.sub(replacement, m.args[1], count)),
                           prefixNick=False)
