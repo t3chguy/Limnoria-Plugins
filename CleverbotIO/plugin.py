@@ -83,7 +83,7 @@ class CleverbotIO(callbacks.Plugin):
             self.log.info('CleverbotIO Instance (%s) Registered' % j['nick'])
         else:
             self.log.error('CleverbotIO Instance failed to Register: %s' %
-                           j['error'])
+                           j['status'])
 
     _queryUrl = 'https://cleverbot.io/1.0/ask'
     def _queryBot(self, irc, query):
