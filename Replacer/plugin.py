@@ -126,7 +126,7 @@ class Replacer(callbacks.PluginRegexp):
                     tmpl = ''
 
                 if pattern.search(text):
-                    irc.reply(_("%s meant «%s%s»") %
+                    irc.reply(_("%s meant %s“%s”") %
                               (msg.nick, tmpl, pattern.sub(replacement, text,
                                count)), prefixNick=False)
                 return
