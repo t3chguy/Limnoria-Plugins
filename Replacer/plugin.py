@@ -119,13 +119,14 @@ class Replacer(callbacks.PluginRegexp):
                     m.command == 'PRIVMSG':
 
                 text = ircmsgs.unAction(m)
+                print(text)
                 if pattern.search(text):
-                    print(m.args[1])
-                    print(m.args)
-                    print(m)
-                    print(ircmsgs.isAction(m))
+                    #print(m.args[1])
+                    #print(m.args)
+                    #print(m)
+                    #print(ircmsgs.isAction(m))
                     irc.reply(_("%s meant => %s") %
-                              (msg.nick, pattern.sub(replacement, m.args[1],
+                              (msg.nick, pattern.sub(replacement, text,
                                count)), prefixNick=False)
                 return
         if self.registryValue("displayErrors", msg.args[0]):
