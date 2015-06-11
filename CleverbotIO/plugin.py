@@ -52,7 +52,6 @@ class CleverbotIO(callbacks.Plugin):
     def __init__(self, irc):
         self.__parent = super(CleverbotIO, self)
         self.__parent.__init__(irc)
-        conf.supybot.plugins.CleverbotIO.botName.addCallback(self._configCallback)
         conf.supybot.plugins.CleverbotIO.appUser.addCallback(self._configCallback)
         conf.supybot.plugins.CleverbotIO.appKey.addCallback(self._configCallback)
         self._createBot()
