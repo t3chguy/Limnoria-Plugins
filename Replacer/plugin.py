@@ -129,6 +129,7 @@ class Replacer(callbacks.PluginRegexp):
                                             fcn_name='last')
                 except ProcessTimeoutError as e:
                     self.log.error('RERROR: %s' % e)
+                    break
                 if result:
                     if self.registryValue('ignoreRegex', msg.args[0]) and \
                             m.tagged('Replacer'):
