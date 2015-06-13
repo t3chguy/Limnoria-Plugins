@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 ###
 # Copyright (c) 2015, Michael Daniel Telatynski <postmaster@webdevguru.co.uk>
 # All rights reserved.
