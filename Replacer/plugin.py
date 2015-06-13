@@ -124,20 +124,20 @@ class Replacer(callbacks.PluginRegexp):
 
                 #if pattern.search(text):
                 try:
-                    result = regexp_wrapper(text, reobj=pattern, timeout=0.01,
-                                            plugin_name=self.name(),
-                                            fcn_name='last')
+                    if not regexp_wrapper(text, reobj=pattern, timeout=0.01,
+                                      plugin_name=self.name(),
+                                      fcn_name='last'):
+                    continue
                 except ProcessTimeoutError as e:
                     self.log.error('RERROR: %s' % e)
                     break
-                if result:
-                    if self.registryValue('ignoreRegex', msg.args[0]) and \
-                            m.tagged('Replacer'):
-                        continue
-                    irc.reply(_("%s meant %s“%s”") %
-                              (msg.nick, tmpl, pattern.sub(replacement,
-                               text, count)), prefixNick=False)
-                    return None
+                if self.registryValue('ignoreRegex', msg.args[0]) and \
+                        m.tagged('Replacer'):
+                    continue
+                irc.reply(_("%s meant %s“%s”") %
+                          (msg.nick, tmpl, pattern.sub(replacement,
+                           text, count)), prefixNick=False)
+                return None
 
         if self.registryValue("displayErrors", msg.args[0]):
             #self.log.debug(_("Replacer: Search %r not found in the last %i messages."),
