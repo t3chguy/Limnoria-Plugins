@@ -13,7 +13,7 @@ def timeout(seconds=10, error_message=os.strerror(errno.ETIME)):
 
         def wrapper(*args, **kwargs):
             signal.signal(signal.SIGALRM, _handle_timeout)
-            signal.setitimer(signal.ITIMER_REAL,seconds) #used timer instead of alarm
+            signal.setitimer(signal.ITIMER_REAL,seconds)
             try:
                 result = func(*args, **kwargs)
             finally:
