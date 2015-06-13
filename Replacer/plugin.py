@@ -170,7 +170,7 @@ class Replacer(callbacks.PluginRegexp):
             irc.error(_("Search not found in the last %i messages.") %
                       len(irc.state.history), Raise=True)
         return None
-    replacer.__doc__ = ACT + SED_PATTERN
+    replacer.__doc__ = ACT_PATTERN + SED_PATTERN
 
 Class = Replacer
 
