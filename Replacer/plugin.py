@@ -137,9 +137,6 @@ class Replacer(callbacks.PluginRegexp):
                 try:
                     if not self._regexsearch(text, pattern):
                         continue
-                except ProcessTimeoutError as e:
-                    self.log.error('PTE: %s' % e)
-                    break
                 except RegexpTimeout as e:
                     self.log.error('RT: %s' % e)
                     break
