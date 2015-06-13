@@ -101,17 +101,12 @@ class Replacer(callbacks.PluginRegexp):
 
         return (pattern, replacement, count)
 
-    def _regexsearch(self, text, pattern):
-        startedOn = time.time()
-        _return = regexp_wrapper(text, reobj=pattern, timeout=0.01,
-                                      plugin_name=self.name(), fcn_name='last')
-        finishedOn = time.time()
-        if startedOn + 1 < finishedOn:
-            self.log.error('Start: %i --- End: %i' % (startedOn, finishedOn))
-            raise RegexpTimeout()
-        return _return
+    @timeout(0.01)
+    @staticmethod
+    def _regexsearch(text, pattern):
+        return pattern.search(text)
 
-    @timeout(3)
+    @timeout(2)
     def replacer(self, irc, msg, regex):
         if not self.registryValue('enable', msg.args[0]):
             return None
@@ -140,9 +135,9 @@ class Replacer(callbacks.PluginRegexp):
                     tmpl = ''
 
                 try:
-                    if not pattern.search(text):
+                    if not self._regexsearch(text, pattern):
                         continue
-                except RegexpTimeout:
+                except TimeoutError:
                     self.log.error('Replacer: regexp timeout - evil regex?')
                     break
 
