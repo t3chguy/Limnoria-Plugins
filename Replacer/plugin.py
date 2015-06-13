@@ -41,9 +41,9 @@ try:
 except ImportError:
     _ = lambda x: x
 
-SED_PATTERN = (r"^s(?P<delim>[^A-Za-z0-9\\])(?P<pattern>.*?)(?P=delim)"
-               r"(?P<replacement>.*?)(?:(?P=delim)(?P<flags>[gi]*))?$")
-SED_REGEX = re.compile(SED_PATTERN)
+
+SED_REGEX = re.compile(r"^s(?P<delim>[^A-Za-z0-9\\])(?P<pattern>.*?)(?P=delim)"
+                       r"(?P<replacement>.*?)(?:(?P=delim)(?P<flags>[gi]*))?$")
 
 
 class Replacer(callbacks.PluginRegexp):
@@ -99,7 +99,6 @@ class Replacer(callbacks.PluginRegexp):
         return (pattern, replacement, count)
 
     def replacer(self, irc, msg, regex):
-
         if not self.registryValue('enable', msg.args[0]):
             return None
         iterable = reversed(irc.state.history)
@@ -137,7 +136,7 @@ class Replacer(callbacks.PluginRegexp):
             irc.error(_("Search not found in the last %i messages.") %
                       len(irc.state.history), Raise=True)
         return None
-    replacer.__doc__ = SED_PATTERN
+    replacer.__doc__ = SED_REGEX.pattern
 
 Class = Replacer
 
