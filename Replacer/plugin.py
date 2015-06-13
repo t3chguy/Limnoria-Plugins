@@ -102,8 +102,7 @@ class Replacer(callbacks.PluginRegexp):
         return (pattern, replacement, count)
 
     @timeout(0.01)
-    @staticmethod
-    def _regexsearch(text, pattern):
+    def _regexsearch(self, text, pattern):
         return pattern.search(text)
 
     @timeout(2)
