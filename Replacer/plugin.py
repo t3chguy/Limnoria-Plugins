@@ -30,6 +30,7 @@
 
 from supybot.commands import *
 import supybot.plugins as plugins
+import supybot.ircmsgs as ircmsgs
 import supybot.callbacks as callbacks
 
 import re
@@ -40,31 +41,29 @@ try:
 except ImportError:
     _ = lambda x: x
 
-SED_PATTERN = re.compile(
-    r'^s(?P<delim>[^A-Za-z0-9\\])(?P<pattern>.*?)(?P=delim)'
-    r'(?P<replacement>.*?)(?:(?P=delim)(?P<flags>[gi]*))?$')
-# SED_PATTERN = re.compile(r'^s(?P<delim>[' + re.escape(string.punctuation) + '])
-# (?P<pattern>.*?)(?P=delim)(?P<replacement>.*?)(?:(?P=delim)(?P<flags>[gi]*))?$')
+
+SED_REGEX = re.compile(r"^s(?P<delim>[^A-Za-z0-9\\])(?P<pattern>.*?)(?P=delim)"
+                       r"(?P<replacement>.*?)(?:(?P=delim)(?P<flags>[gi]*))?$")
 
 
 class Replacer(callbacks.PluginRegexp):
     """History Replacer - Sed Regex Syntax"""
     threaded = True
     public = True
-    unaddressedRegexps = ('replacer',)
+    unaddressedRegexps = ['replacer']
 
     @staticmethod
     def _unpack_sed(expr):
         if '\0' in expr:
-            raise ValueError('expr can\'t contain NUL')
+            raise ValueError('Expression can\'t contain NUL')
 
         delim = expr[1]
         escaped_expr = ''
 
         for (i, c) in enumerate(expr):
             if c == delim and i > 0:
-                if expr[i - 1] == delim and expr[i - 2] != '\\':
-                    raise ValueError('invalid expression')
+                # if expr[i - 1] == delim and expr[i - 2] != '\\':
+                #     raise ValueError('Invalid expression')
 
                 if expr[i - 1] == '\\':
                     escaped_expr = escaped_expr[:-1] + '\0'
@@ -72,10 +71,10 @@ class Replacer(callbacks.PluginRegexp):
 
             escaped_expr += c
 
-        match = re.search(SED_PATTERN, escaped_expr)
+        match = SED_REGEX.search(escaped_expr)
 
         if not match:
-            raise ValueError('invalid expression')
+            return None
 
         groups = match.groupdict()
         pattern = groups['pattern'].replace('\0', delim)
@@ -100,30 +99,44 @@ class Replacer(callbacks.PluginRegexp):
         return (pattern, replacement, count)
 
     def replacer(self, irc, msg, regex):
-        r"^s(?P<delim>[^A-Za-z0-9\\])(?:.*?)(?P=delim)"
-        r"(?:.*?)(?:(?P=delim)(?:[gi]*))?$"
-
+        if not self.registryValue('enable', msg.args[0]):
+            return None
         iterable = reversed(irc.state.history)
+
         try:
             (pattern, replacement, count) = self._unpack_sed(msg.args[1])
         except ValueError as e:
-            if self.registryValue("displayErrors", msg.args[0]):
-                irc.error(_("Error Encountered in your Regex Syntax."), Raise=True)
-            return
+            if self.registryValue('displayErrors', msg.args[0]):
+                irc.error(_("Error encountered in your regex syntax. <%s>" %
+                          e), Raise=True)
+            return None
+
         next(iterable)
         for m in iterable:
             if m.nick == msg.nick and \
                     m.args[0] == msg.args[0] and \
-                    msg.command == 'PRIVMSG' and \
-                    pattern.search(m.args[1]):
-                irc.reply(_("%s meant => %s") %
-                          (msg.nick, pattern.sub(replacement, m.args[1], count)),
-                          prefixNick=False)
-                return
+                    m.command == 'PRIVMSG':
+
+                if ircmsgs.isAction(m):
+                    text = ircmsgs.unAction(m)
+                    tmpl = '*'
+                else:
+                    text = m.args[1]
+                    tmpl = ''
+
+                if pattern.search(text):
+                    if self.registryValue('ignoreRegex', msg.args[0]) and \
+                            not SED_REGEX.search(text):
+                        irc.reply(_("%s meant %s“%s”") %
+                                  (msg.nick, tmpl, pattern.sub(replacement,
+                                   text, count)), prefixNick=False)
+                        return None
+
         if self.registryValue("displayErrors", msg.args[0]):
             irc.error(_("Search not found in the last %i messages.") %
                       len(irc.state.history), Raise=True)
-        return
+        return None
+    replacer.__doc__ = SED_REGEX.pattern
 
 Class = Replacer
 
