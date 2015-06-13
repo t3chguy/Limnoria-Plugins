@@ -50,5 +50,8 @@ conf.registerChannelValue(Replacer, 'displayErrors',
 conf.registerChannelValue(Replacer, 'enable',
     registry.Boolean(True, _("""Should Perl/Sed regex replacing
                      work in this channel?""")))
+conf.registerChannelValue(Replacer, 'ignoreRegex',
+    registry.Boolean(True, _("""Should Perl/Sed regex replacing
+                     ignore messages which look like valid regex?""")))
 
 # vim:set shiftwidth=4 tabstop=4 expandtab textwidth=79:

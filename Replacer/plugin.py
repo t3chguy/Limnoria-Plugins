@@ -41,9 +41,9 @@ try:
 except ImportError:
     _ = lambda x: x
 
-SED_PATTERN = re.compile(r"^s(?P<delim>[^A-Za-z0-9\\])(?P<pattern>.*?)"
-                         r"(?P=delim)(?P<replacement>.*?)"
-                         r"(?:(?P=delim)(?P<flags>[gi]*))?$")
+SED_PATTERN = (r"^s(?P<delim>[^A-Za-z0-9\\])(?P<pattern>.*?)(?P=delim)"
+               r"(?P<replacement>.*?)(?:(?P=delim)(?P<flags>[gi]*))?$")
+SED_REGEX = re.compile(SED_PATTERN)
 
 
 class Replacer(callbacks.PluginRegexp):
@@ -71,7 +71,7 @@ class Replacer(callbacks.PluginRegexp):
 
             escaped_expr += c
 
-        match = re.search(SED_PATTERN, escaped_expr)
+        match = SED_REGEX.search(escaped_expr)
 
         if not match:
             return None
@@ -99,12 +99,11 @@ class Replacer(callbacks.PluginRegexp):
         return (pattern, replacement, count)
 
     def replacer(self, irc, msg, regex):
-        r"^s(?P<delim>[^A-Za-z0-9\\])(?:.*?)(?P=delim)"
-        r"(?:.*?)(?:(?P=delim)(?:[gi]*))?$"
 
         if not self.registryValue('enable', msg.args[0]):
             return None
         iterable = reversed(irc.state.history)
+
         try:
             (pattern, replacement, count) = self._unpack_sed(msg.args[1])
         except ValueError as e:
@@ -112,6 +111,7 @@ class Replacer(callbacks.PluginRegexp):
                 irc.error(_("Error encountered in your regex syntax. <%s>" %
                           e), Raise=True)
             return None
+
         next(iterable)
         for m in iterable:
             if m.nick == msg.nick and \
@@ -126,14 +126,18 @@ class Replacer(callbacks.PluginRegexp):
                     tmpl = ''
 
                 if pattern.search(text):
-                    irc.reply(_("%s meant %s“%s”") %
-                              (msg.nick, tmpl, pattern.sub(replacement, text,
-                               count)), prefixNick=False)
-                return None
+                    if self.registryValue('ignoreRegex', msg.args[0]) and \
+                            not SED_REGEX.search(text):
+                        irc.reply(_("%s meant %s“%s”") %
+                                  (msg.nick, tmpl, pattern.sub(replacement,
+                                   text, count)), prefixNick=False)
+                        return None
+
         if self.registryValue("displayErrors", msg.args[0]):
             irc.error(_("Search not found in the last %i messages.") %
                       len(irc.state.history), Raise=True)
         return None
+    replacer.__doc__ = SED_PATTERN
 
 Class = Replacer
 
