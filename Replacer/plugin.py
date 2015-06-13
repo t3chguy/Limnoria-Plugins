@@ -104,7 +104,7 @@ class Replacer(callbacks.PluginRegexp):
         startedOn = time.time()
         return_ = regexp_wrapper(text, reobj=pattern, timeout=0.01,
                                       plugin_name=self.name(), fcn_name='last')
-        if startedOn + 0.0001 < time.time():
+        if startedOn + 0.001 < time.time():
             raise RegexpTimeout()
 
     def replacer(self, irc, msg, regex):
