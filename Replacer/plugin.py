@@ -104,6 +104,7 @@ class Replacer(callbacks.PluginRegexp):
         try:
             (pattern, replacement, count) = self._unpack_sed(msg.args[1])
         except ValueError as e:
+            self.log.warning(_("Replacer error: %s"), e)
             if self.registryValue('displayErrors', msg.args[0]):
                 irc.error(_("Replacer error: %s" % e), Raise=True)
             return None
