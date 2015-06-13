@@ -40,11 +40,15 @@ def configure(advanced):
     from supybot.questions import expect, anything, something, yn
     conf.registerPlugin('Replacer', True)
     if advanced:
-        output('The IsItDown plugin tells you if a given URL is accessible by the rest of the world')
+        output("""The Replacer Plugin allows you to make Perl/Sed Regex
+               Replacements to your chat history in the form of corrections""")
 
 Replacer = conf.registerPlugin('Replacer')
 
 conf.registerChannelValue(Replacer, 'displayErrors',
     registry.Boolean(True, _("""Should Errors be Displayed?""")))
+conf.registerChannelValue(Replacer, 'enable',
+    registry.Boolean(True, _("""Should Perl/Sed Regex Replacing
+                     work in this channel?""")))
 
 # vim:set shiftwidth=4 tabstop=4 expandtab textwidth=79:

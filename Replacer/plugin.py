@@ -104,11 +104,13 @@ class Replacer(callbacks.PluginRegexp):
         r"^s(?P<delim>[^A-Za-z0-9\\])(?:.*?)(?P=delim)"
         r"(?:.*?)(?:(?P=delim)(?:[gi]*))?$"
 
+        if not self.registryValue('enable', msg.args[0]):
+            return
         iterable = reversed(irc.state.history)
         try:
             (pattern, replacement, count) = self._unpack_sed(msg.args[1])
         except ValueError as e:
-            if self.registryValue("displayErrors", msg.args[0]):
+            if self.registryValue('displayErrors', msg.args[0]):
                 irc.error(_("Error Encountered in your Regex Syntax. <%s>" %
                           e), Raise=True)
             return
