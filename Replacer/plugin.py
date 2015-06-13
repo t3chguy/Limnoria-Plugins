@@ -136,8 +136,8 @@ class Replacer(callbacks.PluginRegexp):
                 try:
                     if not self._regexsearch(text, pattern):
                         continue
-                except TimeoutError:
-                    self.log.error('Replacer: regexp timeout - evil regex?')
+                except TimeoutError as e:
+                    self.log.error('Replacer: %s' % e)
                     break
 
                 if self.registryValue('ignoreRegex', msg.args[0]) and \
