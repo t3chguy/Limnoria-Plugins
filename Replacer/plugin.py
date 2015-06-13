@@ -62,9 +62,6 @@ class Replacer(callbacks.PluginRegexp):
 
         for (i, c) in enumerate(expr):
             if c == delim and i > 0:
-                # if expr[i - 1] == delim and expr[i - 2] != '\\':
-                #     raise ValueError('Invalid expression')
-
                 if expr[i - 1] == '\\':
                     escaped_expr = escaped_expr[:-1] + '\0'
                     continue
@@ -108,8 +105,7 @@ class Replacer(callbacks.PluginRegexp):
             (pattern, replacement, count) = self._unpack_sed(msg.args[1])
         except ValueError as e:
             if self.registryValue('displayErrors', msg.args[0]):
-                irc.error(_("Error encountered in your regex syntax. <%s>" %
-                          e), Raise=True)
+                irc.error(_("Replacer error: %s" % e), Raise=True)
             return None
 
         next(iterable)
@@ -128,7 +124,6 @@ class Replacer(callbacks.PluginRegexp):
                 if pattern.search(text):
                     if self.registryValue('ignoreRegex', msg.args[0]) and \
                             m.tagged('Replacer'):
-                    #         SED_REGEX.search(text):
                         continue
                     irc.reply(_("%s meant %s“%s”") %
                               (msg.nick, tmpl, pattern.sub(replacement,
