@@ -102,6 +102,7 @@ class Replacer(callbacks.PluginRegexp):
         if not self.registryValue('enable', msg.args[0]):
             return None
         iterable = reversed(irc.state.history)
+        msg.tag('Replacer')
 
         try:
             (pattern, replacement, count) = self._unpack_sed(msg.args[1])
@@ -126,11 +127,13 @@ class Replacer(callbacks.PluginRegexp):
 
                 if pattern.search(text):
                     if self.registryValue('ignoreRegex', msg.args[0]) and \
-                            not SED_REGEX.search(text):
-                        irc.reply(_("%s meant %s“%s”") %
-                                  (msg.nick, tmpl, pattern.sub(replacement,
-                                   text, count)), prefixNick=False)
-                        return None
+                            m.tagged('Replacer'):
+                    #         SED_REGEX.search(text):
+                        continue
+                    irc.reply(_("%s meant %s“%s”") %
+                              (msg.nick, tmpl, pattern.sub(replacement,
+                               text, count)), prefixNick=False)
+                    return None
 
         if self.registryValue("displayErrors", msg.args[0]):
             irc.error(_("Search not found in the last %i messages.") %
