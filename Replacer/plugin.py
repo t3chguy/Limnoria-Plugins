@@ -33,6 +33,7 @@ import supybot.plugins as plugins
 import supybot.ircmsgs as ircmsgs
 import supybot.callbacks as callbacks
 
+import time
 import re
 
 try:
