@@ -134,8 +134,8 @@ class Replacer(callbacks.PluginRegexp):
                 except RegexpTimeout as e:
                     self.log.error('RT: %s' % e)
                     break
-                except as e:
-                    self.log.error('Else: %s' % e)
+                except:
+                    self.log.error('Els')
                     break
 
                 if self.registryValue('ignoreRegex', msg.args[0]) and \
