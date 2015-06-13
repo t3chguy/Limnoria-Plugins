@@ -100,8 +100,7 @@ class Replacer(callbacks.PluginRegexp):
 
         return (pattern, replacement, count)
 
-    @staticmethod
-    def _regexsearch(text, pattern):
+    def _regexsearch(self, text, pattern):
         startedOn = time.time()
         return_ = regexp_wrapper(text, reobj=pattern, timeout=0.01,
                                       plugin_name=self.name(), fcn_name='last')
