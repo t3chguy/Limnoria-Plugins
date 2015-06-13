@@ -33,6 +33,7 @@ import supybot.plugins as plugins
 import supybot.ircmsgs as ircmsgs
 import supybot.callbacks as callbacks
 
+from .timeout import timeout
 import time
 import re
 
@@ -101,14 +102,15 @@ class Replacer(callbacks.PluginRegexp):
         return (pattern, replacement, count)
 
     def _regexsearch(self, text, pattern):
-        startedOn = time.time()
+        #startedOn = time.time()
         return_ = regexp_wrapper(text, reobj=pattern, timeout=0.01,
                                       plugin_name=self.name(), fcn_name='last')
-        finishedOn = time.time()
-        if startedOn + 0.001 < finishedOn:
-            self.log.error('Start: %i --- End: %i' % (startedOn, finishedOn))
-            raise RegexpTimeout()
+        #finishedOn = time.time()
+        #if startedOn + 1 < finishedOn:
+        #    self.log.error('Start: %i --- End: %i' % (startedOn, finishedOn))
+        #    raise RegexpTimeout()
 
+    @timeout(3)
     def replacer(self, irc, msg, regex):
         if not self.registryValue('enable', msg.args[0]):
             return None
