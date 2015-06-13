@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 ###
 # Copyright (c) 2015, Michael Daniel Telatynski <postmaster@webdevguru.co.uk>
 # All rights reserved.
@@ -33,6 +35,8 @@ import supybot.plugins as plugins
 import supybot.ircmsgs as ircmsgs
 import supybot.callbacks as callbacks
 
+from .timeout import timeout
+import time
 import re
 
 try:
@@ -44,6 +48,10 @@ except ImportError:
 
 SED_REGEX = re.compile(r"^s(?P<delim>[^A-Za-z0-9\\])(?P<pattern>.*?)(?P=delim)"
                        r"(?P<replacement>.*?)(?:(?P=delim)(?P<flags>[gi]*))?$")
+
+
+class RegexpTimeout(Exception):
+    pass
 
 
 class Replacer(callbacks.PluginRegexp):
@@ -95,6 +103,11 @@ class Replacer(callbacks.PluginRegexp):
 
         return (pattern, replacement, count)
 
+    @timeout(0.01)
+    def _regexsearch(self, text, pattern):
+        return pattern.search(text)
+
+    @timeout(2)
     def replacer(self, irc, msg, regex):
         if not self.registryValue('enable', msg.args[0]):
             return None
@@ -104,6 +117,7 @@ class Replacer(callbacks.PluginRegexp):
         try:
             (pattern, replacement, count) = self._unpack_sed(msg.args[1])
         except ValueError as e:
+            self.log.warning(_("Replacer error: %s"), e)
             if self.registryValue('displayErrors', msg.args[0]):
                 irc.error(_("Replacer error: %s" % e), Raise=True)
             return None
@@ -121,16 +135,27 @@ class Replacer(callbacks.PluginRegexp):
                     text = m.args[1]
                     tmpl = ''
 
-                if pattern.search(text):
-                    if self.registryValue('ignoreRegex', msg.args[0]) and \
-                            m.tagged('Replacer'):
+                try:
+                    if not self._regexsearch(text, pattern):
                         continue
-                    irc.reply(_("%s meant %s“%s”") %
-                              (msg.nick, tmpl, pattern.sub(replacement,
-                               text, count)), prefixNick=False)
-                    return None
+                except TimeoutError as e: # Isn't working for some reason
+                    self.log.error('TIMEOUT ERROR CAUGHT!!')
+                    break
+                except Exception as e:
+                    self.log.error('Replacer: %s' % type(e).__name__)
+                    break
+
+                if self.registryValue('ignoreRegex', msg.args[0]) and \
+                        m.tagged('Replacer'):
+                    continue
+                irc.reply(_("%s meant %s“%s”") %
+                          (msg.nick, tmpl, pattern.sub(replacement,
+                           text, count)), prefixNick=False)
+                return None
 
         if self.registryValue("displayErrors", msg.args[0]):
+            #self.log.debug(_("Replacer: Search %r not found in the last %i messages."),
+            #               regex, len(irc.state.history))
             irc.error(_("Search not found in the last %i messages.") %
                       len(irc.state.history), Raise=True)
         return None
