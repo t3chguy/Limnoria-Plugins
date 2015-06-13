@@ -127,7 +127,7 @@ class Replacer(callbacks.PluginRegexp):
                     if not regexp_wrapper(text, reobj=pattern, timeout=0.01,
                                       plugin_name=self.name(),
                                       fcn_name='last'):
-                    continue
+                        continue
                 except ProcessTimeoutError as e:
                     self.log.error('RERROR: %s' % e)
                     break
