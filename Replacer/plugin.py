@@ -128,8 +128,14 @@ class Replacer(callbacks.PluginRegexp):
                                       plugin_name=self.name(),
                                       fcn_name='last'):
                         continue
-                except (ProcessTimeoutError, RegexpTimeout) as e:
+                except ProcessTimeoutError as e:
                     self.log.error('PTE: %s' % e)
+                    break
+                except RegexpTimeout as e:
+                    self.log.error('RT: %s' % e)
+                    break
+                except as e:
+                    self.log.error('Else: %s' % e)
                     break
 
                 if self.registryValue('ignoreRegex', msg.args[0]) and \
