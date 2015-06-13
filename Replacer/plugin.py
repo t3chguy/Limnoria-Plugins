@@ -46,6 +46,10 @@ SED_REGEX = re.compile(r"^s(?P<delim>[^A-Za-z0-9\\])(?P<pattern>.*?)(?P=delim)"
                        r"(?P<replacement>.*?)(?:(?P=delim)(?P<flags>[gi]*))?$")
 
 
+class RegexpTimeout(Exception):
+    pass
+
+
 class Replacer(callbacks.PluginRegexp):
     """History Replacer - Sed Regex Syntax"""
     threaded = True
@@ -95,6 +99,14 @@ class Replacer(callbacks.PluginRegexp):
 
         return (pattern, replacement, count)
 
+    @staticmethod
+    def _regexsearch(text, pattern):
+        startedOn = time.time()
+        return_ = regexp_wrapper(text, reobj=pattern, timeout=0.01,
+                                      plugin_name=self.name(), fcn_name='last')
+        if startedOn + 0.0001 < time.time():
+            raise RegexpTimeout()
+
     def replacer(self, irc, msg, regex):
         if not self.registryValue('enable', msg.args[0]):
             return None
@@ -122,11 +134,8 @@ class Replacer(callbacks.PluginRegexp):
                     text = m.args[1]
                     tmpl = ''
 
-                #if pattern.search(text):
                 try:
-                    if not regexp_wrapper(text, reobj=pattern, timeout=0.01,
-                                      plugin_name=self.name(),
-                                      fcn_name='last'):
+                    if not self._regexsearch(text, pattern):
                         continue
                 except ProcessTimeoutError as e:
                     self.log.error('PTE: %s' % e)
