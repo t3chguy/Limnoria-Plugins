@@ -122,7 +122,9 @@ class Replacer(callbacks.PluginRegexp):
                     text = m.args[1]
                     tmpl = ''
 
-                if pattern.search(text):
+                #if pattern.search(text):
+                if regexp_wrapper(text, reobj=patternm timeout=0.01,
+                                  plugin_name=self.name(), fcn_name='last'):
                     if self.registryValue('ignoreRegex', msg.args[0]) and \
                             m.tagged('Replacer'):
                         continue
@@ -132,6 +134,8 @@ class Replacer(callbacks.PluginRegexp):
                     return None
 
         if self.registryValue("displayErrors", msg.args[0]):
+            #self.log.debug(_("Replacer: Search %r not found in the last %i messages."),
+            #               regex, len(irc.state.history))
             irc.error(_("Search not found in the last %i messages.") %
                       len(irc.state.history), Raise=True)
         return None
