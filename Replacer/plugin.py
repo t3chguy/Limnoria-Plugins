@@ -115,7 +115,14 @@ class Replacer(callbacks.PluginRegexp):
             return None
         iterable = reversed(irc.state.history)
         msg.tag('Replacer')
-        target = regex.group('nick')
+        target = regex.group('nick') or ''
+
+        if target:
+            checkNick = target
+            prefix = '%s thinks %s' % (msg.nick, target)
+        else:
+            checkNick = msg.nick
+            prefix = msg.nick
 
         try:
             message = 's' + msg.args[1][len(target):].split('s', 1)[-1]
@@ -128,16 +135,16 @@ class Replacer(callbacks.PluginRegexp):
 
         next(iterable)
         for m in iterable:
-            if m.nick == msg.nick and \
+            if m.nick == checkNick and \
                     m.args[0] == msg.args[0] and \
                     m.command == 'PRIVMSG':
 
                 if ircmsgs.isAction(m):
                     text = ircmsgs.unAction(m)
-                    tmpl = '*'
+                    tmpl = 'do'
                 else:
                     text = m.args[1]
-                    tmpl = ''
+                    tmpl = 'say'
 
                 try:
                     if not self._regexsearch(text, pattern):
@@ -152,8 +159,8 @@ class Replacer(callbacks.PluginRegexp):
                 if self.registryValue('ignoreRegex', msg.args[0]) and \
                         m.tagged('Replacer'):
                     continue
-                irc.reply(_("%s meant %s“ %s ”") %
-                          (msg.nick, tmpl, pattern.sub(replacement,
+                irc.reply(_("%s to %s “ %s ”") %
+                          (prefix, tmpl, pattern.sub(replacement,
                            text, count)), prefixNick=False)
                 return None
 
