@@ -115,7 +115,7 @@ class Replacer(callbacks.PluginRegexp):
             return None
         iterable = reversed(irc.state.history)
         msg.tag('Replacer')
-        print(regex.group('nick'))
+        print(regex)
 
         try:
             (pattern, replacement, count) = self._unpack_sed(msg.args[1])
