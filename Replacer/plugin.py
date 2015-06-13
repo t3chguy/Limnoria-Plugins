@@ -123,7 +123,7 @@ class Replacer(callbacks.PluginRegexp):
                     tmpl = ''
 
                 #if pattern.search(text):
-                if regexp_wrapper(text, reobj=patternm timeout=0.01,
+                if regexp_wrapper(text, reobj=pattern, timeout=0.01,
                                   plugin_name=self.name(), fcn_name='last'):
                     if self.registryValue('ignoreRegex', msg.args[0]) and \
                             m.tagged('Replacer'):
