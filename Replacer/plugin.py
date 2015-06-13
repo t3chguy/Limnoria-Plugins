@@ -46,8 +46,10 @@ except ImportError:
     _ = lambda x: x
 
 
-SED_REGEX = re.compile(r"^s(?P<delim>[^A-Za-z0-9\\])(?P<pattern>.*?)(?P=delim)"
-                       r"(?P<replacement>.*?)(?:(?P=delim)(?P<flags>[gi]*))?$")
+SED_PATTERN = (r"s(?P<delim>[^A-Za-z0-9\\])(?P<pattern>.*?)(?P=delim)"
+               r"(?P<replacement>.*?)(?:(?P=delim)(?P<flags>[gi]*))?$")
+ACT_PATTERN = r"^(?:(?P<nick>[a-z_\-\[\]\\^{}|`][a-z0-9_\-\[\]\\^{}|`]*)[|:, ]{1,2})?"
+SED_REGEX = re.compile(r"^" + SED_PATTERN)
 
 
 class RegexpTimeout(Exception):
@@ -113,6 +115,7 @@ class Replacer(callbacks.PluginRegexp):
             return None
         iterable = reversed(irc.state.history)
         msg.tag('Replacer')
+        print(regex.group('nick'))
 
         try:
             (pattern, replacement, count) = self._unpack_sed(msg.args[1])
@@ -148,18 +151,18 @@ class Replacer(callbacks.PluginRegexp):
                 if self.registryValue('ignoreRegex', msg.args[0]) and \
                         m.tagged('Replacer'):
                     continue
-                irc.reply(_("%s meant %s“%s”") %
+                irc.reply(_("%s meant %s“ %s ”") %
                           (msg.nick, tmpl, pattern.sub(replacement,
                            text, count)), prefixNick=False)
                 return None
 
+        self.log.debug(_("""Replacer: Search %r not found in the last %i
+                       messages."""), regex, len(irc.state.history))
         if self.registryValue("displayErrors", msg.args[0]):
-            #self.log.debug(_("Replacer: Search %r not found in the last %i messages."),
-            #               regex, len(irc.state.history))
             irc.error(_("Search not found in the last %i messages.") %
                       len(irc.state.history), Raise=True)
         return None
-    replacer.__doc__ = SED_REGEX.pattern
+    replacer.__doc__ = ACT_PATTERN + SED_PATTERN
 
 Class = Replacer
 
