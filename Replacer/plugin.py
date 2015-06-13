@@ -48,8 +48,8 @@ except ImportError:
 
 SED_PATTERN = (r"s(?P<delim>[^A-Za-z0-9\\])(?P<pattern>.*?)(?P=delim)"
                r"(?P<replacement>.*?)(?:(?P=delim)(?P<flags>[gi]*))?$")
-ACT_PATTERN = r"^(?:(?P<nick>[a-z_\-\[\]\\^{}|`][a-z0-9_\-\[\]\\^{}|`]*)[|:, ]{1,2})?"
 SED_REGEX = re.compile(r"^" + SED_PATTERN)
+ACT = r"^(?i:(?P<nick>[a-z_\-\[\]\\^{}|`][a-z0-9_\-\[\]\\^{}|`]*)[|:, ]{1,2})?"
 
 
 class RegexpTimeout(Exception):
@@ -170,7 +170,7 @@ class Replacer(callbacks.PluginRegexp):
             irc.error(_("Search not found in the last %i messages.") %
                       len(irc.state.history), Raise=True)
         return None
-    replacer.__doc__ = ACT_PATTERN + SED_PATTERN
+    replacer.__doc__ = ACT + SED_PATTERN
 
 Class = Replacer
 
