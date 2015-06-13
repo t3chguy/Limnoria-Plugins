@@ -115,12 +115,10 @@ class Replacer(callbacks.PluginRegexp):
             return None
         iterable = reversed(irc.state.history)
         msg.tag('Replacer')
-        print(regex.group('nick'))
-        print(msg.args[0])
-        print(msg.args[1])
+        target = regex.group('nick')
 
         try:
-            message = 's' + msg.args[1].split('s', 1)[-1]
+            message = 's' + msg.args[1][len(target):].split('s', 1)[-1]
             (pattern, replacement, count) = self._unpack_sed(message)
         except ValueError as e:
             self.log.warning(_("Replacer error: %s"), e)
