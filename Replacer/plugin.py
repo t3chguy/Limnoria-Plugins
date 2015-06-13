@@ -65,7 +65,7 @@ class Replacer(callbacks.PluginRegexp):
                 if expr[i - 1] == delim and expr[i - 2] != '\\':
                     print(expr[i-1])
                     print(expr[i-2])
-                    raise ValueError('invalid expression')
+                    raise ValueError('Invalid expression')
 
                 if expr[i - 1] == '\\':
                     escaped_expr = escaped_expr[:-1] + '\0'
@@ -76,7 +76,7 @@ class Replacer(callbacks.PluginRegexp):
         match = re.search(SED_PATTERN, escaped_expr)
 
         if not match:
-            raise ValueError('Invalid Expression')
+            return None
 
         groups = match.groupdict()
         pattern = groups['pattern'].replace('\0', delim)
@@ -105,15 +105,15 @@ class Replacer(callbacks.PluginRegexp):
         r"(?:.*?)(?:(?P=delim)(?:[gi]*))?$"
 
         if not self.registryValue('enable', msg.args[0]):
-            return
+            return None
         iterable = reversed(irc.state.history)
         try:
             (pattern, replacement, count) = self._unpack_sed(msg.args[1])
         except ValueError as e:
             if self.registryValue('displayErrors', msg.args[0]):
-                irc.error(_("Error Encountered in your Regex Syntax. <%s>" %
+                irc.error(_("Error encountered in your regex syntax. <%s>" %
                           e), Raise=True)
-            return
+            return None
         next(iterable)
         for m in iterable:
             if m.nick == msg.nick and \
@@ -131,11 +131,11 @@ class Replacer(callbacks.PluginRegexp):
                     irc.reply(_("%s meant %s“%s”") %
                               (msg.nick, tmpl, pattern.sub(replacement, text,
                                count)), prefixNick=False)
-                return
+                return None
         if self.registryValue("displayErrors", msg.args[0]):
             irc.error(_("Search not found in the last %i messages.") %
                       len(irc.state.history), Raise=True)
-        return
+        return None
 
 Class = Replacer
 

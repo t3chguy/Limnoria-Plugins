@@ -40,15 +40,15 @@ def configure(advanced):
     from supybot.questions import expect, anything, something, yn
     conf.registerPlugin('Replacer', True)
     if advanced:
-        output("""The Replacer Plugin allows you to make Perl/Sed Regex
-               Replacements to your chat history in the form of corrections""")
+        output("""The Replacer Plugin allows you to make Perl/Sed regex
+               replacements to your chat history in the form of corrections""")
 
 Replacer = conf.registerPlugin('Replacer')
 
 conf.registerChannelValue(Replacer, 'displayErrors',
-    registry.Boolean(True, _("""Should Errors be Displayed?""")))
+    registry.Boolean(True, _("""Should errors be displayed?""")))
 conf.registerChannelValue(Replacer, 'enable',
-    registry.Boolean(True, _("""Should Perl/Sed Regex Replacing
+    registry.Boolean(True, _("""Should Perl/Sed regex replacing
                      work in this channel?""")))
 
 # vim:set shiftwidth=4 tabstop=4 expandtab textwidth=79:
