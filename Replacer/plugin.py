@@ -140,7 +140,7 @@ class Replacer(callbacks.PluginRegexp):
                     tmpl = ''
 
                 try:
-                    if not self._regexsearch(text, pattern):
+                    if not pattern.search(text):
                         continue
                 except RegexpTimeout:
                     self.log.error('Replacer: regexp timeout - evil regex?')
