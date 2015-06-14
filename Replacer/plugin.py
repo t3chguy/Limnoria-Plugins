@@ -154,13 +154,13 @@ class Replacer(callbacks.PluginRegexp):
                                    "possibly an Evil ReDoS Regexp."),
                                    message, msg.nick)
                     if self.registryValue('displayErrors', msg.args[0]):
-                        irc.error(_("Malicious Regexp Detected"))
+                        irc.error(_("Regular expression took too long"))
                     return None
 
                 if self.registryValue('ignoreRegex', msg.args[0]) and \
                         m.tagged('Replacer'):
                     continue
-                irc.reply(_("%s meant to %s “ %s ”") %
+                irc.reply(_("%s meant to %s “%s”") %
                           (prefix, tmpl, pattern.sub(replacement,
                            text, count)), prefixNick=False)
                 return None
