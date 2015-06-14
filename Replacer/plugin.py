@@ -133,7 +133,10 @@ class Replacer(callbacks.PluginRegexp):
                 irc.error(_("Replacer error: %s" % e))
             return None
         except Exception as e:
-            print(e)
+            self.log.error(_("Replacer: %s by %s"), str(e), msg.nick)
+            if self.registryValue('displayErrors', msg.args[0]):
+                irc.error(_("Replacer: %s by %s") % (str(e), msg.nick))
+            return None
 
         next(iterable)
         for m in iterable:
@@ -152,8 +155,8 @@ class Replacer(callbacks.PluginRegexp):
                     if not self._regexsearch(text, pattern):
                         continue
                 except TimeoutError as e:
-                    self.log.error("Replacer: Regexp %s by %s timed out, "
-                                   "possibly an Evil ReDoS Regexp.",
+                    self.log.error(_("Replacer: Regexp %s by %s timed out, "
+                                   "possibly an Evil ReDoS Regexp."),
                                    message, msg.nick)
                     if self.registryValue('displayErrors', msg.args[0]):
                         irc.error(_("Malicious Regexp Detected"))
