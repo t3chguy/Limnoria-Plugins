@@ -132,6 +132,8 @@ class Replacer(callbacks.PluginRegexp):
             if self.registryValue('displayErrors', msg.args[0]):
                 irc.error(_("Replacer error: %s" % e))
             return None
+        except Exception as e:
+            self.log.error(e)
 
         next(iterable)
         for m in iterable:
