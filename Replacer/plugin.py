@@ -58,9 +58,9 @@ class RegexpTimeout(Exception):
 
 class Replacer(callbacks.PluginRegexp):
     """History Replacer - Sed Regex Syntax"""
+    unaddressedRegexps = ['replacer']
     threaded = True
     public = True
-    unaddressedRegexps = ['replacer']
 
     @staticmethod
     def _unpack_sed(expr):
@@ -149,23 +149,22 @@ class Replacer(callbacks.PluginRegexp):
                 try:
                     if not self._regexsearch(text, pattern):
                         continue
-                except TimeoutError as e: # Isn't working for some reason
-                    self.log.error('TIMEOUT ERROR CAUGHT!!')
-                    break
-                except Exception as e:
-                    self.log.error('Replacer: %s' % type(e).__name__)
+                except TimeoutError as e:
+                    self.log.error("""Replacer: Regexp %r by %s timed out,
+                                   possibly an Evil ReDoS Regexp.""",
+                                   regex, msg.nick)
                     break
 
                 if self.registryValue('ignoreRegex', msg.args[0]) and \
                         m.tagged('Replacer'):
                     continue
                 irc.reply(_("%s meant to %s “ %s ”") %
-                          (prefix, tmpl, pattern.sub(replacement,
+                          (prefix, tmpl,pattern.sub(replacement,
                            text, count)), prefixNick=False)
                 return None
 
-        self.log.debug(_("""Replacer: Search %r not found in the last %i
-                       messages."""), regex, len(irc.state.history))
+        self.log.debug(_("""Replacer: Regexp %r by %s not found in the last %i
+                       messages."""), regex, msg.nick, len(irc.state.history))
         if self.registryValue("displayErrors", msg.args[0]):
             irc.error(_("Search not found in the last %i messages.") %
                       len(irc.state.history), Raise=True)
