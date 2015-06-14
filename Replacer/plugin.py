@@ -133,7 +133,7 @@ class Replacer(callbacks.PluginRegexp):
                 irc.error(_("Replacer error: %s" % e))
             return None
         except Exception as e:
-            self.log.error(e)
+            print(e)
 
         next(iterable)
         for m in iterable:
