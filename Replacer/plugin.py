@@ -130,7 +130,7 @@ class Replacer(callbacks.PluginRegexp):
         except ValueError as e:
             self.log.warning(_("Replacer error: %s"), e)
             if self.registryValue('displayErrors', msg.args[0]):
-                irc.error(_("Replacer error: %s" % e), Raise=True)
+                irc.error(_("Replacer error: %s" % e))
             return None
 
         next(iterable)
@@ -150,11 +150,11 @@ class Replacer(callbacks.PluginRegexp):
                     if not self._regexsearch(text, pattern):
                         continue
                 except TimeoutError as e:
-                    self.log.error("""Replacer: Regexp %s by %s timed out,
-                                   possibly an Evil ReDoS Regexp.""",
+                    self.log.error("Replacer: Regexp %s by %s timed out, "
+                                   "possibly an Evil ReDoS Regexp.",
                                    message, msg.nick)
                     if self.registryValue('displayErrors', msg.args[0]):
-                        irc.error(_("Malicious Regexp Detected"), Raise=True)
+                        irc.error(_("Malicious Regexp Detected"))
                     return None
 
                 if self.registryValue('ignoreRegex', msg.args[0]) and \
@@ -165,12 +165,11 @@ class Replacer(callbacks.PluginRegexp):
                            text, count)), prefixNick=False)
                 return None
 
-        historyLen = len(irc.state.history)
-        self.log.info(_("Replacer: Regexp %s by %s not found in the last %i"
-                        "messages."), message, msg.nick, historyLen)
+        histLen = len(irc.state.history)
+        self.log.info(_("Replacer: Regexp %s by %s not found in the last %i "
+                        "messages."), message, msg.nick, histLen)
         if self.registryValue("displayErrors", msg.args[0]):
-            irc.error(_("Search not found in the last %i messages.") %
-                      historyLen, Raise=True)
+            irc.error(_("Search not found in the last %i messages.") % histLen)
         return None
     replacer.__doc__ = ACT_PATTERN + SED_PATTERN
 
