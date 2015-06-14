@@ -167,7 +167,7 @@ class Replacer(callbacks.PluginRegexp):
 
         historyLen = len(irc.state.history)
         self.log.info(_("""Replacer: Regexp %s by %s not found in the last %i
-                       messages."""), message, msg.nick, historyLen))
+                       messages."""), message, msg.nick, historyLen)
         if self.registryValue("displayErrors", msg.args[0]):
             irc.error(_("Search not found in the last %i messages.") %
                       historyLen, Raise=True)
