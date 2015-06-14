@@ -33,7 +33,6 @@
 from supybot.commands import *
 import supybot.plugins as plugins
 import supybot.ircmsgs as ircmsgs
-import supybot.ircutils as ircutils
 import supybot.callbacks as callbacks
 
 from .timeout import timeout, TimeoutError
@@ -49,7 +48,7 @@ except ImportError:
 
 SED_PATTERN = (r"s(?P<delim>[^\w\\])(?P<pattern>.*?)(?P=delim)"
                r"(?P<replacement>.*?)(?:(?P=delim)(?P<flags>[gi]*))?$")
-ACT_PATTERN = r"^(?i)(?:(?P<nick>.+?)[|:, ]{1,2})?"
+ACT_PATTERN = r"^(?i)(?:(?P<nick>[a-z_\-\[\]\\^{}|`][\w\-\[\]\\^{}|`]*)[|:, ]{1,2})?"
 SED_REGEX = re.compile(r"^" + SED_PATTERN)
 
 
@@ -116,8 +115,6 @@ class Replacer(callbacks.PluginRegexp):
             return None
         iterable = reversed(irc.state.history)
         target = regex.group('nick') or ''
-        if not ircutils.isNick(target):
-            return None
         msg.tag('Replacer')
 
         if not target or msg.nick == target:
