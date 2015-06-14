@@ -127,15 +127,10 @@ class Replacer(callbacks.PluginRegexp):
         try:
             message = 's' + msg.args[1][len(target):].split('s', 1)[-1]
             (pattern, replacement, count) = self._unpack_sed(message)
-        except ValueError as e:
-            self.log.warning(_("Replacer error: %s"), e)
-            if self.registryValue('displayErrors', msg.args[0]):
-                irc.error(_("Replacer error: %s" % e))
-            return None
         except Exception as e:
-            self.log.error(_("Replacer: %s by %s"), str(e), msg.nick)
+            self.log.error(_("Replacer error: %s by %s"), str(e), msg.nick)
             if self.registryValue('displayErrors', msg.args[0]):
-                irc.error(_("Replacer: %s by %s") % (str(e), msg.nick))
+                irc.error(_("Replacer, %s by %s") % (str(e), msg.nick))
             return None
 
         next(iterable)
