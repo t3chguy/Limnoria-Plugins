@@ -150,7 +150,7 @@ class Replacer(callbacks.PluginRegexp):
                     if not self._regexsearch(text, pattern):
                         continue
                 except TimeoutError as e:
-                    self.log.error("""Replacer: Regexp %r by %s timed out,
+                    self.log.error("""Replacer: Regexp %s by %s timed out,
                                    possibly an Evil ReDoS Regexp.""",
                                    message, msg.nick)
                     if self.registryValue('displayErrors', msg.args[0]):
@@ -166,7 +166,7 @@ class Replacer(callbacks.PluginRegexp):
                 return None
 
         historyLen = len(irc.state.history)
-        self.log.info(_("""Replacer: Regexp %r by %s not found in the last %i
+        self.log.info(_("""Replacer: Regexp %s by %s not found in the last %i
                        messages."""), message, msg.nick, historyLen))
         if self.registryValue("displayErrors", msg.args[0]):
             irc.error(_("Search not found in the last %i messages.") %
