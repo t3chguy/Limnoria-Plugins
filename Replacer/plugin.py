@@ -117,12 +117,12 @@ class Replacer(callbacks.PluginRegexp):
         msg.tag('Replacer')
         target = regex.group('nick') or ''
 
-        if target:
-            checkNick = target
-            prefix = '%s thinks %s' % (msg.nick, target)
-        else:
+        if msg.nick == target:
             checkNick = msg.nick
             prefix = msg.nick
+        else:
+            checkNick = target
+            prefix = '%s thinks %s' % (msg.nick, target)
 
         try:
             message = 's' + msg.args[1][len(target):].split('s', 1)[-1]
