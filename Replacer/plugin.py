@@ -152,7 +152,9 @@ class Replacer(callbacks.PluginRegexp):
                 except TimeoutError as e:
                     self.log.error("""Replacer: Regexp %r by %s timed out,
                                    possibly an Evil ReDoS Regexp.""",
-                                   regex, msg.nick)
+                                   regex.match, msg.nick)
+                    if self.registryValue('displayErrors', msg.args[0]):
+                        irc.error(_("Malicious Regexp Detected"), Raise=True)
                     return None
 
                 if self.registryValue('ignoreRegex', msg.args[0]) and \
@@ -164,7 +166,7 @@ class Replacer(callbacks.PluginRegexp):
                 return None
 
         self.log.info(_("""Replacer: Regexp %r by %s not found in the last %i
-                       messages."""), regex, msg.nick, len(irc.state.history))
+                       messages."""), regex.match, msg.nick, len(irc.state.history))
         if self.registryValue("displayErrors", msg.args[0]):
             irc.error(_("Search not found in the last %i messages.") %
                       len(irc.state.history), Raise=True)
