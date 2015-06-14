@@ -117,7 +117,7 @@ class Replacer(callbacks.PluginRegexp):
         msg.tag('Replacer')
         target = regex.group('nick') or ''
 
-        if msg.nick == target:
+        if not target or msg.nick == target:
             checkNick = msg.nick
             prefix = msg.nick
         else:
