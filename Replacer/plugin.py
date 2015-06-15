@@ -51,7 +51,6 @@ SED_PATTERN = (r"s(?P<delim>[^\w\\])(?P<pattern>.*?)(?P=delim)"
                r"(?P<replacement>.*?)(?:(?P=delim)(?P<flags>[gi]*))?$")
 ACT_PATTERN = (r"^(?i)(?:(?P<nick>%s)[|:, ]{1,2})?" %
                ircutils.nickRe.pattern[1:-1])
-print(ACT_PATTERN)
 SED_REGEX = re.compile(r"^" + SED_PATTERN)
 
 
