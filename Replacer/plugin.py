@@ -33,11 +33,10 @@
 from supybot.commands import *
 import supybot.plugins as plugins
 import supybot.ircmsgs as ircmsgs
+from supybot.ircutils import nickRe
 import supybot.callbacks as callbacks
-import supybot.ircutils.nickRe as nickRe
 
 from .timeout import timeout, TimeoutError
-import time
 import re
 
 try:
