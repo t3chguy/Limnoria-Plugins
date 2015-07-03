@@ -160,6 +160,7 @@ class Replacer(callbacks.PluginRegexp):
                 if self.registryValue('ignoreRegex', msg.args[0]) and \
                         m.tagged('Replacer'):
                     continue
+                replacement = ircutils.bold(replacement)
                 irc.reply(_("%s meant to %s “%s”") %
                           (prefix, tmpl, pattern.sub(replacement,
                            text, count)), prefixNick=False)
