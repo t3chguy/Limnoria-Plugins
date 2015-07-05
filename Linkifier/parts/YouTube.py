@@ -1,5 +1,6 @@
 from urllib.parse import urlencode, urlparse, parse_qsl
 import supybot.ircutils as ircutils
+from jinja2 import Template
 import requests
 import json
 
@@ -19,13 +20,13 @@ class YouTube(object):
                 "{{dislike_count}} dislikes :: {{favorite_count}} favorites",
                 _("""Template used for YouTube title responses""")))
 
-    def addHandlers(handlers):
-        handlers["youtube.com"] = YouTube.handler
-        handlers["www.youtube.com"] = YouTube.handler
-        handlers["youtu.be"] = YouTube.handler
-        handlers["m.youtube.com"] = YouTube.handler
+    def addHandlers(self):
+        self.handlers["youtube.com"] = YouTube.handler
+        self.handlers["www.youtube.com"] = YouTube.handler
+        self.handlers["youtu.be"] = YouTube.handler
+        self.handlers["m.youtube.com"] = YouTube.handler
 
-    def handler(self, url, info, Template):
+    def handler(self, url, info):
         """
         Uses the Youtube API to provide additional meta data about
         Youtube Video links posted.

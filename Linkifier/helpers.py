@@ -22,3 +22,13 @@ def getTimeFromSeconds(seconds):
         if h > 0:
             duration = "%02d:%s" % (h, duration)
         return duration
+
+def getReadableFileSize(num, suffix="B"):
+        """
+        Returns human readable file size
+        """
+        for unit in ["","Ki","Mi","Gi","Ti","Pi","Ei","Zi"]:
+            if abs(num) < 1024.0:
+                return "%3.1f%s%s" % (num, unit, suffix)
+            num /= 1024.0
+        return "%.1f%s%s" % (num, "Yi", suffix)

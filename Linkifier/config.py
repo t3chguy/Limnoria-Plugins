@@ -101,8 +101,7 @@ for part in parts.list:
                     Linkifier.handlers, name), nam, entry)
 
         obj.configure(confWrapper, registry, _)
-    except Exception as e:
-        #print(e)
+    except:
         pass
 
 # vim:set shiftwidth=4 tabstop=4 expandtab textwidth=79:

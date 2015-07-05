@@ -29,7 +29,6 @@
 ###
 
 from urllib.parse import urlencode, urlparse
-from jinja2 import Template
 from . import parts
 import re
 
@@ -63,11 +62,11 @@ class Linkifier(callbacks.PluginRegexp):
         for part in parts.list:
             try:
                 name = part.__name__.rsplit('.', 1)[-1]
-                getattr(part, name).addHandlers(self.handlers)
+                getattr(part, name).addHandlers(self)
             except Exception as e:
                 print(e)
                 pass
-        print(self.handlers)
+        #print(self.handlers)
 
     def process(self, irc, msg, regex):
         channel = msg.args[0]
@@ -84,14 +83,14 @@ class Linkifier(callbacks.PluginRegexp):
             info = urlparse(url)
             domain = info.netloc
             if domain in self.handlers:
-                title += self.handlers[domain](self, url, info, Template)
+                title += self.handlers[domain](self, url, info)
             else:
                 try:
-                    title += self.handlers["_"](self, url, info, Template)
+                    title += self.handlers["_"](self, url, info)
                 except:
                     pass
             try:
-                title += self.handlers["*"](self, url, info, Template)
+                title += self.handlers["*"](self, url, info)
             except:
                 pass
             irc.sendMsg(ircmsgs.privmsg(channel, title))
