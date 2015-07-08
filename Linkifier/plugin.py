@@ -32,7 +32,6 @@ from urllib.parse import urlencode, urlparse
 from . import parts
 import re
 
-
 import supybot.utils as utils
 from supybot.commands import *
 import supybot.plugins as plugins
@@ -69,11 +68,21 @@ class Linkifier(callbacks.PluginRegexp):
         #print(self.handlers)
 
     def process(self, irc, msg, regex):
+        r"(https?:\/\/(?:www\.|(?!www))[^\s\.]+\.[^\s]{2,}|www\.[^\s]+\.[^\s]{2,})"
+
         channel = msg.args[0]
         if (not irc.isChannel(channel) or ircmsgs.isCtcp(msg)):
             return None
 
-        url = regex.group(0).strip()
+        title = self.run(regex.group(0).strip())
+        if not title:
+            return None
+
+        if self.registryValue("useBold"):
+            title = ircutils.bold(title)
+        irc.sendMsg(ircmsgs.privmsg(channel, title))
+
+    def run(self, url):
         #checkCache = self.readCache(url)
         checkCache = None
         if checkCache is not None:
@@ -82,8 +91,12 @@ class Linkifier(callbacks.PluginRegexp):
             title = ""
             info = urlparse(url)
             domain = info.netloc
+
             if domain in self.handlers:
-                title += self.handlers[domain](self, url, info)
+                primary = self.handlers[domain](self, url, info)
+
+            if primary:
+                title += primary
             else:
                 try:
                     title += self.handlers["_"](self, url, info)
@@ -93,7 +106,7 @@ class Linkifier(callbacks.PluginRegexp):
                 title += self.handlers["*"](self, url, info)
             except:
                 pass
-            irc.sendMsg(ircmsgs.privmsg(channel, title))
+            return title
 
 
 Class = Linkifier

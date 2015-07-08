@@ -61,10 +61,6 @@ conf.registerGlobalValue(Linkifier, 'urlTimeout',
     registry.Integer(8, _("""Timeout for getting a title. If you set this too
     high, the bot will time out.""")))
 
-conf.registerGlobalValue(Linkifier, 'urlRegularExpression',
-    registry.String(r"(https?:\/\/(?:www\.|(?!www))[^\s\.]+\.[^\s]{2,}|www\.[^\s]+\.[^\s]{2,})",
-    _("""This regular expression will be used to match URLs""")))
-
 conf.registerGlobalValue(Linkifier, 'useBold',
      registry.Boolean(False, _("""Use bold in titles""")))
 

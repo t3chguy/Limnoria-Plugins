@@ -35,7 +35,7 @@ Linkifier: Parses URLs, Modularly
 import supybot
 import supybot.world as world
 
-__version__ = "0.1"
+__version__ = "0.2"
 __author__ = supybot.authors.unknown
 __contributors__ = {}
 __url__ = ''
@@ -46,7 +46,6 @@ from . import plugin
 from . import parts
 from imp import reload
 
-#reload(config)
 reload(helpers)
 reload(plugin)
 
@@ -60,6 +59,5 @@ if world.testing:
 
 Class = plugin.Class
 configure = config.configure
-Class.process.__doc__ = config.Linkifier.urlRegularExpression.__str__()
 
 # vim:set shiftwidth=4 tabstop=4 expandtab textwidth=79:
