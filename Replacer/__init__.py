@@ -48,7 +48,6 @@ from . import config
 from . import plugin
 from imp import reload
 
-reload(config)
 reload(plugin)
 
 if world.testing:
