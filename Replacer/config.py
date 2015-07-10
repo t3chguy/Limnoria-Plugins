@@ -40,13 +40,15 @@ def configure(advanced):
     from supybot.questions import expect, anything, something, yn
     conf.registerPlugin('Replacer', True)
     if advanced:
-        output("""The Replacer Plugin allows you to make Perl/Sed regex
-               replacements to your chat history in the form of corrections""")
+        output("""The Replacer Plugin allows you to make Perl/Sed-style regex
+               replacements to your chat history in the form of corrections.""")
 
 Replacer = conf.registerPlugin('Replacer')
 
 conf.registerChannelValue(Replacer, 'displayErrors',
     registry.Boolean(True, _("""Should errors be displayed?""")))
+conf.registerChannelValue(Replacer, 'boldReplacementText',
+    registry.Boolean(True, _("""Should the replacement text be bolded?""")))
 conf.registerChannelValue(Replacer, 'enable',
     registry.Boolean(True, _("""Should Perl/Sed regex replacing
                      work in this channel?""")))
