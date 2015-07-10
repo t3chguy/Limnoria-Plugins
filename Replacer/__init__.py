@@ -37,9 +37,11 @@ Allows you to make Shorthand Corrections to your Chat History
 import supybot
 import supybot.world as world
 
-__version__ = "0.5"
+__version__ = "0.6"
 __author__ = supybot.Author("Michael Daniel Telatynski", "t3chguy", "postmaster@webdevguru.co.uk")
-__contributors__ = {}
+__contributors__ = {supybot.Author("James Lu", "GLolol", "glolol1@hotmail.com"):
+                    ["an option for bolding the replacement text"]
+                   }
 __url__ = 'https://github.com/t3chguy/Limnoria-Plugins'
 
 from . import config
