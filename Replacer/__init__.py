@@ -40,7 +40,9 @@ import supybot.world as world
 __version__ = "0.6"
 __author__ = supybot.Author("Michael Daniel Telatynski", "t3chguy", "postmaster@webdevguru.co.uk")
 __contributors__ = {supybot.Author("James Lu", "GLolol", "glolol1@hotmail.com"):
-                    ["an option for bolding the replacement text"]
+                    	["an option for bolding the replacement text"],
+                    supybot.Author('nyuszika7h', 'nyuszika7h', 'nyuszika7h@openmailbox.org'):
+                    	["_unpack_sed method within plugin.py"]
                    }
 __url__ = 'https://github.com/t3chguy/Limnoria-Plugins'
 
