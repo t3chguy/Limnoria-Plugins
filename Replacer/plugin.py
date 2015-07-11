@@ -33,7 +33,7 @@
 from supybot.commands import *
 import supybot.plugins as plugins
 import supybot.ircmsgs as ircmsgs
-from supybot.ircutils import nickRe
+import supybot.ircutils as ircutils
 import supybot.callbacks as callbacks
 
 from .timeout import timeout, TimeoutError
@@ -48,7 +48,8 @@ except ImportError:
 
 SED_PATTERN = (r"s(?P<delim>[^\w\\])(?P<pattern>.*?)(?P=delim)"
                r"(?P<replacement>.*?)(?:(?P=delim)(?P<flags>[gi]*))?$")
-ACT_PATTERN = (r"^(?i)(?:(?P<nick>%s)[|:, ]{1,2})?" % nickRe.pattern[1:-1])
+ACT_PATTERN = (r"^(?i)(?:(?P<nick>%s)[|:, ]{1,2})?" %
+               ircutils.nickRe.pattern[1:-1])
 SED_REGEX = re.compile(r"^" + SED_PATTERN)
 
 
