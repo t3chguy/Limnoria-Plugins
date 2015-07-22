@@ -91,6 +91,7 @@ class Linkifier(callbacks.PluginRegexp):
             title = ""
             info = urlparse(url)
             domain = info.netloc
+            primary = None
 
             if domain in self.handlers:
                 primary = self.handlers[domain](self, url, info)
