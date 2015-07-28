@@ -63,8 +63,8 @@ class Replacer(callbacks.PluginRegexp):
     threaded = True
     public = True
 
-    @staticmethod
-    def _unpack_sed(expr):
+    @timeout(0.01)
+    def _unpack_sed(self, expr):
         if '\0' in expr:
             raise ValueError('Expression can\'t contain NUL')
 
@@ -99,7 +99,7 @@ class Replacer(callbacks.PluginRegexp):
         for flag in raw_flags:
             if flag == 'g':
                 count = 0
-            if flag == 'i':
+            if flag == 'i' or self.registryValue('ignoreCase'):
                 flags |= re.IGNORECASE
 
         pattern = re.compile(pattern, flags)
