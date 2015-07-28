@@ -52,7 +52,7 @@ conf.registerChannelValue(Replacer, 'boldReplacementText',
 conf.registerChannelValue(Replacer, 'enable',
     registry.Boolean(True, _("""Should Perl/Sed regex replacing
                      work in this channel?""")))
-conf.registryGlobalValue(Replacer, 'ignoreCase',
+conf.registerGlobalValue(Replacer, 'ignoreCase',
     registry.Boolean(False, _("""Should Case always be ignored?""")))
 conf.registerChannelValue(Replacer, 'ignoreRegex',
     registry.Boolean(True, _("""Should Perl/Sed regex replacing
