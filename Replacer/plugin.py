@@ -46,7 +46,7 @@ except ImportError:
     _ = lambda x: x
 
 
-SED_PATTERN = (r"s(?P<delim>[^A-Za-z0-9\\])(?P<pattern>.*?)(?P=delim)"
+SED_PATTERN = (r"s(?P<delim>[^A-Za-z0-9\s\\])(?P<pattern>.*?)(?P=delim)"
                r"(?P<replacement>.*?)(?:(?P=delim)(?P<flags>[gi]*))?$")
 ACT_PATTERN = r"^(?i)(?:(?P<nick>[a-z_\-\[\]\\^{}|`][a-z0-9_\-\[\]\\^{}|`]*)[|:, ]{1,2})?"
 SED_REGEX = re.compile(r"^" + SED_PATTERN)
